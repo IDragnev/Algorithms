@@ -18,6 +18,25 @@ namespace Test
 			Assert::IsTrue(sortsNonTrivialArray<InsertionSorter>());
 		}
 
+		TEST_METHOD(findingMinElement)
+		{
+			const int nums[] = { 1, 12, 100, -1, 10 };
+			const auto expected = nums + 3;
+
+			auto result = minElementPosition(std::cbegin(nums), std::cend(nums), LessThan{});
+
+			Assert::AreEqual(result, expected);
+		}
+
+		TEST_METHOD(findingMinElementOnEmptyRange)
+		{
+			std::vector<int> nums;
+
+			auto result = minElementPosition(std::cbegin(nums), std::cend(nums), LessThan{});
+
+			Assert::IsTrue(result == std::cend(nums));
+		}
+
 	private:
 		template <typename Sorter>
 		static bool sortsNonTrivialArray()
