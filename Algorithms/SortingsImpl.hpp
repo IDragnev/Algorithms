@@ -49,4 +49,18 @@ namespace IDragnev::Algorithm
 			*emptyPos = std::move(item);
 		}
 	}	
+
+	template <typename ForwardIt, typename CompareFn>
+	void SelectionSorter::operator()(ForwardIt first, ForwardIt last, CompareFn lessThan) const
+	{
+		auto end = std::next(first, std::distance(first, last) - 1);
+		
+		for (auto current = first;
+			current != end;
+			++current)
+		{
+			auto min = minElementPosition(std::next(current), last);
+			swapIfLess(*min, *current, lessThan);
+		}
+	}
 }
