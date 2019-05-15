@@ -1,5 +1,5 @@
 #include "CppUnitTest.h"
-#include "Sortings.h"
+#include "Algorithm.h"
 #include <vector>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -11,11 +11,22 @@ namespace Test
 	TEST_CLASS(Tests)
 	{
 		using IntArray = std::vector<int>;
+		using MergeSorter = MergeSorter<IntArray::iterator>;
 
 	public:
 		TEST_METHOD(insertionSort)
 		{
 			Assert::IsTrue(sortsNonTrivialArray<InsertionSorter>());
+		}
+
+		TEST_METHOD(selectionSort)
+		{
+			Assert::IsTrue(sortsNonTrivialArray<SelectionSorter>());
+		}
+
+		TEST_METHOD(mergeSort)
+		{
+			Assert::IsTrue(sortsNonTrivialArray<MergeSorter>());
 		}
 
 		TEST_METHOD(findingMinElement)
@@ -28,7 +39,7 @@ namespace Test
 			Assert::AreEqual(result, expected);
 		}
 
-		TEST_METHOD(findingMinElementOnEmptyRange)
+		TEST_METHOD(findingMinElementOfEmptyRange)
 		{
 			std::vector<int> nums;
 

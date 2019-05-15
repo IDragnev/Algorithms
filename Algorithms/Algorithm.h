@@ -8,7 +8,15 @@
 namespace IDragnev::Algorithm
 {
 	template <typename T, typename CompareFn>
-	void swapIfLess(T& lhs, T& rhs, CompareFn lessThan);
+	void swapIfLess(T& lhs, T& rhs, CompareFn lessThan)
+	{
+		using std::swap;
+
+		if (lessThan(lhs, rhs))
+		{
+			swap(lhs, rhs);
+		}
+	}
 
 	class InsertionSorter
 	{
@@ -25,27 +33,7 @@ namespace IDragnev::Algorithm
 	};
 
 	template<class ForwardIt, typename CompareFn = Functional::LessThan>
-	ForwardIt minElementPosition(ForwardIt first, ForwardIt last, CompareFn lessThan = {})
-	{
-		if (first == last)
-		{
-			return last;
-		}
-
-		auto smallest = first;
-
-		for (auto current = std::next(first);
-			current != last; 
-			++current) 
-		{
-			if (lessThan(*current, *smallest))
-			{
-				smallest = current;
-			}
-		}
-
-		return smallest;
-	}
+	ForwardIt minElementPosition(ForwardIt first, ForwardIt last, CompareFn lessThan = {});
 
 	class SelectionSorter
 	{
@@ -98,6 +86,7 @@ namespace IDragnev::Algorithm
 	};
 }
 
-#include "SortingsImpl.hpp"
+#include "SelectionSorterImpl.hpp"
+#include "InsertionSorterImpl.hpp"
 #include "MergeSorterImpl.hpp"
 #endif //__SORTINGS_H_INCLUDED__
