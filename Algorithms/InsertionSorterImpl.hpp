@@ -16,7 +16,7 @@ namespace IDragnev::Algorithm
 	inline void InsertionSorter::operator()(RandomAcessIt first, RandomAcessIt last, CompareFn lessThan) const
 	{
 		putMinimalInFront(first, last, lessThan);
-		doSort(first + 2, last, lessThan);
+		doSort(++first, last, lessThan);
 	}
 
 	template <typename RandomAcessIt, typename CompareFn>
@@ -34,7 +34,7 @@ namespace IDragnev::Algorithm
 	void InsertionSorter::doSort(RandomAcessIt first, RandomAcessIt last, CompareFn lessThan)
 	{
 		for (auto current = first;
-			current != last;
+			current < last;
 			++current)
 		{
 			auto item = std::move(*current);
