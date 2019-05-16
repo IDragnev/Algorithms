@@ -48,6 +48,51 @@ namespace Test
 			Assert::IsTrue(result == std::cend(nums));
 		}
 
+		TEST_METHOD(lowerBoundWithPresentKeyInTheSequence)
+		{
+			const auto nums = numsFromTo(0, 100);
+			
+			auto position = lowerBound(std::begin(nums), std::end(nums), 40);
+
+			Assert::IsTrue(position == std::begin(nums) + 40);
+		}
+
+		TEST_METHOD(lowerBoundWithNoEqualButGreaterKeyInTheSequence)
+		{
+			const auto nums = numsFromTo(0, 100);
+
+			auto position = lowerBound(std::begin(nums), std::end(nums), -1);
+
+			Assert::IsTrue(position == std::begin(nums));
+		}
+
+		TEST_METHOD(lowerBoundWithNoGreaterOrEqualKeyInTheSequence)
+		{
+			const auto nums = numsFromTo(0, 100);
+
+			auto position = lowerBound(std::begin(nums), std::end(nums), 10'000);
+
+			Assert::IsTrue(position == std::end(nums));
+		}
+
+		TEST_METHOD(binarySearchWithMissingKey)
+		{
+			const auto nums = numsFromTo(0, 100);
+
+			auto position = binarySearch(std::begin(nums), std::end(nums), 10'000);
+
+			Assert::IsTrue(position == std::end(nums));
+		}
+
+		TEST_METHOD(binarySearchWithPresentKey)
+		{
+			const auto nums = numsFromTo(0, 100);
+
+			auto position = binarySearch(std::begin(nums), std::end(nums), 40);
+
+			Assert::IsTrue(position == std::begin(nums) + 40);
+		}
+
 	private:
 		template <typename Sorter>
 		static bool sortsNonTrivialArray()

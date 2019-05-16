@@ -86,6 +86,56 @@ namespace IDragnev::Algorithm
 		Difference length = 0;
 		Buffer buffer;
 	};
+
+	template <
+		typename InputIt, 
+		typename T,
+		typename CompareFn = Functional::LessThan
+	> InputIt lowerBound(InputIt first, InputIt last, const T& value, CompareFn lessThan = {})
+	{
+		while (first != last)
+		{
+			auto middle = std::next(first, std::distance(first, last) / 2);
+
+			if (lessThan(*middle, value))
+			{
+				first = ++middle;
+			}
+			else
+			{
+				last = middle;
+			}
+		}
+
+		return first;
+	}
+
+	template <
+		typename InputIt,
+		typename T,
+		typename CompareFn = Functional::LessThan
+	> InputIt binarySearch(InputIt first, InputIt last, const T& value, CompareFn lessThan = {})
+	{
+		while (first != last)
+		{
+			auto middle = std::next(first, std::distance(first, last) / 2);
+
+			if (lessThan(*middle, value))
+			{
+				first = ++middle;
+			}
+			else if (lessThan(value, *middle))
+			{
+				last = middle;
+			}
+			else
+			{
+				return middle;
+			}
+		}
+
+		return last;
+	}
 }
 
 #include "SelectionSorterImpl.hpp"
