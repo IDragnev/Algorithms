@@ -52,12 +52,31 @@ namespace Test
 		template <typename Sorter>
 		static bool sortsNonTrivialArray()
 		{
-			auto nums = IntArray{ 3, 5, 4, 1, 0, 2 };
-			const auto expected = IntArray{ 0, 1, 2, 3, 4, 5 };
+			const auto expected = numsFromTo(1, 100);
+			auto nums = reverse(expected);
 
 			Sorter{}(std::begin(nums), std::end(nums), LessThan{});
 
 			return nums == expected;
+		}
+
+		template <typename T>
+		static auto numsFromTo(T from, T to)
+		{
+			auto count = to - from + 1;
+			auto generator = [i = from]() mutable { return i++; };
+			auto result = std::vector<T>(count, 0);
+
+			std::generate_n(std::begin(result), count, generator);
+
+			return result;
+		}
+
+		template <typename Container>
+		static Container reverse(Container c)
+		{
+			std::reverse(std::begin(c), std::end(c));		
+			return std::move(c);
 		}
 	};
 }

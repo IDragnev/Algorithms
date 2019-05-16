@@ -62,12 +62,12 @@ namespace IDragnev::Algorithm
 	{
 		while (!(isLeftPartExhausted() && isRightPartExhausted()))
 		{
-			while (!isLeftPartExhausted() && (isRightPartExhausted() || !lessThan(buffer[right], buffer[left])))
+			while (!isLeftPartExhausted() && (isRightPartExhausted() || !rightPointsToSmallerItem(lessThan)))
 			{
 				insertFromLeftPart();
 			}
 
-			while (!isRightPartExhausted() && (isLeftPartExhausted() || lessThan(buffer[right], buffer[left])))
+			while (!isRightPartExhausted() && (isLeftPartExhausted() || rightPointsToSmallerItem(lessThan)))
 			{
 				insertFromRightPart();
 			}
@@ -84,6 +84,13 @@ namespace IDragnev::Algorithm
 	inline bool MergeSorter<RandomAccessIt, lowerBound>::isRightPartExhausted() const noexcept
 	{
 		return right >= length;
+	}
+
+	template <typename RandomAccessIt, std::size_t lowerBound>
+	template <typename CompareFn>
+	inline bool MergeSorter<RandomAccessIt, lowerBound>::rightPointsToSmallerItem(CompareFn lessThan) const
+	{
+		return lessThan(*(first + right), *(first + left));
 	}
 
 	template <typename RandomAccessIt, std::size_t lowerBound>

@@ -75,6 +75,8 @@ namespace IDragnev::Algorithm
 
 		bool isLeftPartExhausted() const noexcept;
 		bool isRightPartExhausted() const noexcept;
+		template <typename CompareFn>
+		bool rightPointsToSmallerItem(CompareFn lessThan) const;
 		
 	private:
 		RandomAccessIt first;
