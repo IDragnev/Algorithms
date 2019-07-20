@@ -27,7 +27,7 @@ namespace IDragnev::Algorithm
 	private:
 		template <typename RandomAcessIt, typename CompareFn>
 		static void putMinimalInFront(RandomAcessIt first, RandomAcessIt last, CompareFn less);
-			
+
 		template <typename RandomAcessIt, typename CompareFn>
 		static void doSort(RandomAcessIt first, RandomAcessIt last, CompareFn less);
 	};
@@ -42,7 +42,7 @@ namespace IDragnev::Algorithm
 		void operator()(ForwardIt first, ForwardIt last, CompareFn lessThan = {}) const;
 	};
 
-	template <typename RandomAccessIt, std::size_t lowerBound = 25> 
+	template <typename RandomAccessIt, std::size_t lowerBound = 25>
 	class MergeSorter
 	{
 	private:
@@ -77,7 +77,7 @@ namespace IDragnev::Algorithm
 		bool isRightPartExhausted() const noexcept;
 		template <typename CompareFn>
 		bool rightPointsToSmallerItem(CompareFn lessThan) const;
-		
+
 	private:
 		RandomAccessIt first;
 		Difference left = 0;
@@ -87,10 +87,10 @@ namespace IDragnev::Algorithm
 		Buffer buffer;
 	};
 
-	template <typename InputIt, 
+	template <typename InputIt,
 		      typename T,
 		      typename CompareFn = Functional::LessThan
-	> constexpr InputIt 
+	> constexpr InputIt
 	lowerBound(InputIt first, InputIt last, const T& value, CompareFn lessThan = {})
 	{
 		while (first != last)
@@ -111,9 +111,9 @@ namespace IDragnev::Algorithm
 	}
 
 	template <typename InputIt,
-			  typename T,
+		      typename T,
 		      typename CompareFn = std::greater<T>
-	> inline constexpr 
+	> inline constexpr
 	InputIt upperBound(InputIt first, InputIt last, const T& value, CompareFn greaterThan = {})
 	{
 		using Functional::inverse;
@@ -144,6 +144,50 @@ namespace IDragnev::Algorithm
 		}
 
 		return last;
+	}
+
+	template <typename ForwardIt>
+	ForwardIt rotate(ForwardIt first, ForwardIt middle, ForwardIt last)
+	{
+		if (first == middle) return last;
+		if (middle == last) return first;
+
+		auto read = middle;
+		auto nextRead = read;
+		auto write = first;
+
+		while (read != last) {
+			if (write == nextRead) { //in case [first, middle) exhausts first
+				nextRead = read;
+			}		
+			std::iter_swap(write++, read++);
+		}
+
+		(rotate)(write, nextRead, last);
+
+		return write;
+	}
+
+	template <typename ForwardIt, typename Predicate>
+	ForwardIt stablePartition(ForwardIt first, ForwardIt last, Predicate p)
+	{
+		if (auto length = std::distance(first, last);
+			length == 0) 
+		{
+			return first;
+		}
+		else if (length == 1) 
+		{
+			return p(*first) ? first + 1 : first;
+		} 
+		else 
+		{			
+			auto middle = std::next(first, length / 2);
+			
+			return (rotate)(stablePartition(first, middle, p),
+				            middle,
+				            stablePartition(middle, last, p));
+		}
 	}
 }
 

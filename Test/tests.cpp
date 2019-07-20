@@ -4,24 +4,25 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using IDragnev::Functional::LessThan;
-using namespace IDragnev::Algorithm;
+
+namespace alg = IDragnev::Algorithm;
 
 namespace Test
 {		
 	TEST_CLASS(Tests)
 	{
 		using IntArray = std::vector<int>;
-		using MergeSorter = MergeSorter<IntArray::iterator>;
+		using MergeSorter = alg::MergeSorter<IntArray::iterator>;
 
 	public:
 		TEST_METHOD(insertionSort)
 		{
-			Assert::IsTrue(sortsNonTrivialArray<InsertionSorter>());
+			Assert::IsTrue(sortsNonTrivialArray<alg::InsertionSorter>());
 		}
 
 		TEST_METHOD(selectionSort)
 		{
-			Assert::IsTrue(sortsNonTrivialArray<SelectionSorter>());
+			Assert::IsTrue(sortsNonTrivialArray<alg::SelectionSorter>());
 		}
 
 		TEST_METHOD(mergeSort)
@@ -34,7 +35,7 @@ namespace Test
 			const int nums[] = { 1, 12, 100, -1, 10 };
 			const auto expected = nums + 3;
 
-			auto result = minElementPosition(std::cbegin(nums), std::cend(nums), LessThan{});
+			auto result = alg::minElementPosition(std::cbegin(nums), std::cend(nums), LessThan{});
 
 			Assert::AreEqual(result, expected);
 		}
@@ -43,7 +44,7 @@ namespace Test
 		{
 			std::vector<int> nums;
 
-			auto result = minElementPosition(std::cbegin(nums), std::cend(nums), LessThan{});
+			auto result = alg::minElementPosition(std::cbegin(nums), std::cend(nums), LessThan{});
 
 			Assert::IsTrue(result == std::cend(nums));
 		}
@@ -52,7 +53,7 @@ namespace Test
 		{
 			const auto nums = numsFromTo(0, 100);
 			
-			auto position = lowerBound(std::begin(nums), std::end(nums), 40);
+			auto position = alg::lowerBound(std::begin(nums), std::end(nums), 40);
 
 			Assert::IsTrue(position == std::begin(nums) + 40);
 		}
@@ -61,7 +62,7 @@ namespace Test
 		{
 			const auto nums = numsFromTo(0, 100);
 
-			auto position = lowerBound(std::begin(nums), std::end(nums), -1);
+			auto position = alg::lowerBound(std::begin(nums), std::end(nums), -1);
 
 			Assert::IsTrue(position == std::begin(nums));
 		}
@@ -70,7 +71,7 @@ namespace Test
 		{
 			const auto nums = numsFromTo(0, 100);
 
-			auto position = lowerBound(std::begin(nums), std::end(nums), 10'000);
+			auto position = alg::lowerBound(std::begin(nums), std::end(nums), 10'000);
 
 			Assert::IsTrue(position == std::end(nums));
 		}
@@ -79,7 +80,7 @@ namespace Test
 		{
 			const auto nums = numsFromTo(0, 100);
 
-			auto position = upperBound(std::cbegin(nums), std::cend(nums), 1'000);
+			auto position = alg::upperBound(std::cbegin(nums), std::cend(nums), 1'000);
 
 			Assert::IsTrue(position == std::cend(nums));
 		}
@@ -88,7 +89,7 @@ namespace Test
 		{
 			const auto nums = numsFromTo(0, 100);
 
-			auto position = upperBound(std::cbegin(nums), std::cend(nums), 97);
+			auto position = alg::upperBound(std::cbegin(nums), std::cend(nums), 97);
 
 			Assert::IsTrue(position == std::begin(nums) + 98);
 		}
@@ -97,7 +98,7 @@ namespace Test
 		{
 			const auto nums = numsFromTo(0, 100);
 
-			auto position = binarySearch(std::begin(nums), std::end(nums), 10'000);
+			auto position = alg::binarySearch(std::begin(nums), std::end(nums), 10'000);
 
 			Assert::IsTrue(position == std::end(nums));
 		}
@@ -106,9 +107,62 @@ namespace Test
 		{
 			const auto nums = numsFromTo(0, 100);
 
-			auto position = binarySearch(std::begin(nums), std::end(nums), 40);
+			auto position = alg::binarySearch(std::begin(nums), std::end(nums), 40);
 
 			Assert::IsTrue(position == std::begin(nums) + 40);
+		}
+
+		TEST_METHOD(rotateWithEmptyFirstSubrange)
+		{
+			auto nums = numsFromTo(1, 10);
+		
+			auto midPoint = alg::rotate(std::begin(nums), std::begin(nums), std::end(nums));
+
+			Assert::IsTrue(nums == numsFromTo(1, 10));
+			Assert::IsTrue(midPoint == std::end(nums));
+		}
+
+		TEST_METHOD(rotateWithEmptySecondSubrange)
+		{
+			auto nums = numsFromTo(1, 10);
+
+			auto midPoint = alg::rotate(std::begin(nums), std::end(nums), std::end(nums));
+
+			Assert::IsTrue(nums == numsFromTo(1, 10));
+			Assert::IsTrue(midPoint == std::begin(nums));
+		}
+
+		TEST_METHOD(rotateWithNonEmptySubranges)
+		{
+			auto nums = numsFromTo(1, 10);
+			using Nums = decltype(nums);
+
+			auto midPoint = alg::rotate(std::begin(nums), std::begin(nums) + 5, std::end(nums));
+
+			Assert::IsTrue(nums == Nums{ 6, 7, 8, 9, 10, 1, 2, 3, 4, 5});
+			Assert::IsTrue(midPoint == std::begin(nums) + 5);
+		}
+
+		TEST_METHOD(stablePartitionWithEmptyRange)
+		{
+			auto nums = std::vector<int>{};
+			auto isPositive = [](auto x) { return x > 0; };
+
+			auto it = alg::stablePartition(std::begin(nums), std::end(nums), isPositive);
+
+			Assert::IsTrue(it == std::begin(nums));
+		}
+
+		TEST_METHOD(stablePartitionWithNonEmptyRange)
+		{
+			auto nums = numsFromTo(1, 10);
+			using Nums = decltype(nums);
+			auto isEven = [](auto x) { return x % 2 == 0; };
+
+			auto it = alg::stablePartition(std::begin(nums), std::end(nums), isEven);
+
+			Assert::IsTrue(nums == Nums{ 2, 4, 6, 8, 10, 1, 3, 5, 7, 9 });
+			Assert::IsTrue(it == std::begin(nums) + 5);
 		}
 
 	private:
