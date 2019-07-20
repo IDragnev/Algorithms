@@ -75,6 +75,24 @@ namespace Test
 			Assert::IsTrue(position == std::end(nums));
 		}
 
+		TEST_METHOD(upperBoundWithNoGreaterKeyInTheSequence)
+		{
+			const auto nums = numsFromTo(0, 100);
+
+			auto position = upperBound(std::cbegin(nums), std::cend(nums), 1'000);
+
+			Assert::IsTrue(position == std::cend(nums));
+		}
+
+		TEST_METHOD(upperBoundWithGreaterKeyInTheSequence)
+		{
+			const auto nums = numsFromTo(0, 100);
+
+			auto position = upperBound(std::cbegin(nums), std::cend(nums), 97);
+
+			Assert::IsTrue(position == std::begin(nums) + 98);
+		}
+
 		TEST_METHOD(binarySearchWithMissingKey)
 		{
 			const auto nums = numsFromTo(0, 100);

@@ -87,11 +87,11 @@ namespace IDragnev::Algorithm
 		Buffer buffer;
 	};
 
-	template <
-		typename InputIt, 
-		typename T,
-		typename CompareFn = Functional::LessThan
-	> InputIt lowerBound(InputIt first, InputIt last, const T& value, CompareFn lessThan = {})
+	template <typename InputIt, 
+		      typename T,
+		      typename CompareFn = Functional::LessThan
+	> constexpr InputIt 
+	lowerBound(InputIt first, InputIt last, const T& value, CompareFn lessThan = {})
 	{
 		while (first != last)
 		{
@@ -110,10 +110,19 @@ namespace IDragnev::Algorithm
 		return first;
 	}
 
-	template <
-		typename InputIt,
-		typename T,
-		typename CompareFn = Functional::LessThan
+	template <typename InputIt,
+			  typename T,
+		      typename CompareFn = std::greater<T>
+	> inline constexpr 
+	InputIt upperBound(InputIt first, InputIt last, const T& value, CompareFn greaterThan = {})
+	{
+		using Functional::inverse;
+		return lowerBound(first, last, value, inverse(greaterThan));
+	}
+
+	template <typename InputIt,
+		      typename T,
+		      typename CompareFn = Functional::LessThan
 	> InputIt binarySearch(InputIt first, InputIt last, const T& value, CompareFn lessThan = {})
 	{
 		while (first != last)
