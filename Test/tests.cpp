@@ -194,6 +194,21 @@ namespace Test
 			Assert::AreEqual(result, 12);
 		}
 
+		TEST_METHOD(inclusiveScan)
+		{
+			using Ints = std::vector<int>;
+
+			auto nums = Ints{ 2, 3, 5, 9, 11 };
+			auto result = Ints(nums.size(), 0);
+
+			alg::inclusiveScan(std::cbegin(nums),
+							   std::cend(nums),
+							   std::begin(result),
+						       std::plus{});
+
+			Assert::IsTrue(result == Ints{ 2, 5, 10, 19, 30 });
+		}
+
 	private:
 		template <typename Sorter>
 		static bool sortsNonTrivialArray()

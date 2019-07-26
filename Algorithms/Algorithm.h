@@ -223,6 +223,31 @@ namespace IDragnev::Algorithm
 
 		return accumulator;
 	}
+
+	template <typename InputIt,
+		      typename OutputIt,
+		      typename BinaryOperation
+	> OutputIt inclusiveScan(InputIt first, InputIt last,
+							 OutputIt destFirst,
+							 BinaryOperation op)
+	{
+		if (first == last) return destFirst;
+
+		auto accumulator = *first;
+		*destFirst = accumulator;
+		auto dest = ++destFirst;
+
+		for (auto current = ++first;
+			current != last;
+			++current)
+		{
+			accumulator = op(std::move(accumulator), *current);
+			*dest = accumulator;
+			++dest;
+		}
+
+		return dest;
+	}
 }
 
 #include "SelectionSorterImpl.hpp"
