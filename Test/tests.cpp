@@ -209,6 +209,38 @@ namespace Test
 			Assert::IsTrue(result == Ints{ 2, 5, 10, 19, 30 });
 		}
 
+		TEST_METHOD(exclusiveScan)
+		{
+			using Ints = std::vector<int>;
+
+			auto nums = Ints{ 2, 3, 5, 9, 11 };
+			auto result = Ints(nums.size(), 0);
+
+			alg::exclusiveScan(std::cbegin(nums),
+				               std::cend(nums),
+				               std::begin(result),
+						       0,
+				               std::plus{});
+
+			Assert::IsTrue(result == Ints{ 0, 2, 5, 10, 19 });
+		}
+
+		TEST_METHOD(exclusiveScanWithSingletonRange)
+		{
+			using Ints = std::vector<int>;
+
+			auto nums = Ints{ 2 };
+			auto result = Ints(nums.size(), 0);
+
+			alg::exclusiveScan(std::cbegin(nums),
+				               std::cend(nums),
+				               std::begin(result),
+				               100,
+				               std::plus{});
+
+			Assert::IsTrue(result == Ints{ 100 });
+		}
+
 	private:
 		template <typename Sorter>
 		static bool sortsNonTrivialArray()

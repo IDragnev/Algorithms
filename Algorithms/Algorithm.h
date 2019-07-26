@@ -248,6 +248,33 @@ namespace IDragnev::Algorithm
 
 		return dest;
 	}
+
+	template <typename InputIt,
+		      typename OutputIt,
+		      typename T,
+		      typename BinaryOperation
+	> OutputIt exclusiveScan(InputIt first, InputIt last,
+							 OutputIt destFirst,
+							 T init,
+							 BinaryOperation op)
+	{
+		if (first == last) return destFirst;
+
+		*destFirst = init;
+		auto accumulator = std::move(init);
+		auto dest = ++destFirst;
+
+		for (auto current = first;
+			std::next(current) != last; //exclude the last element
+			++current)
+		{
+			accumulator = op(std::move(accumulator), *current);
+			*dest = accumulator;
+			++dest;
+		}
+
+		return dest;
+	}
 }
 
 #include "SelectionSorterImpl.hpp"
