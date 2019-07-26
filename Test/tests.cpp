@@ -9,6 +9,8 @@ namespace alg = IDragnev::Algorithm;
 
 namespace Test
 {		
+	auto max = [](auto x, auto y) { return x >= y ? x : y; };
+
 	TEST_CLASS(Tests)
 	{
 		using IntArray = std::vector<int>;
@@ -167,7 +169,6 @@ namespace Test
 
 		TEST_METHOD(zipReduce)
 		{
-			auto max = [](auto x, auto y) { return x >= y ? x : y; };
 			auto nums = std::vector<int>{ 2, 3, 5, 9, 11 };
 
 			auto result = alg::zipReduce(std::cbegin(nums) + 1, std::cend(nums),
@@ -177,6 +178,20 @@ namespace Test
 										 max);
 
 			Assert::AreEqual(result, 4);
+		}
+
+		TEST_METHOD(transformReduce)
+		{
+			using IDragnev::Functional::plus;
+
+			auto nums = { 2, 3, 5, 9, 11 };
+
+			auto result = alg::transformReduce(std::cbegin(nums),
+											   std::cend(nums),
+											   0,
+										 	   plus(1),
+											   max);
+			Assert::AreEqual(result, 12);
 		}
 
 	private:

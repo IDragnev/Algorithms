@@ -206,6 +206,23 @@ namespace IDragnev::Algorithm
 
 		return accumulator;
 	}
+
+	template <typename InputIt,
+			  typename TransformOp,
+			  typename ReduceOp,
+			  typename T
+	> T transformReduce(InputIt first, InputIt last,
+					     T accumulator,
+						 TransformOp f, ReduceOp reduce)
+	{
+		while (first != last)
+		{
+			accumulator = reduce(std::move(accumulator), f(*first));
+			++first;
+		}
+
+		return accumulator;
+	}
 }
 
 #include "SelectionSorterImpl.hpp"
