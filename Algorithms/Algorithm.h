@@ -95,9 +95,8 @@ namespace IDragnev::Algorithm
 	{
 		while (first != last)
 		{
-			auto middle = std::next(first, std::distance(first, last) / 2);
-
-			if (lessThan(*middle, value))
+			if (auto middle = std::next(first, std::distance(first, last) / 2);
+				lessThan(*middle, value))
 			{
 				first = ++middle;
 			}
@@ -127,9 +126,8 @@ namespace IDragnev::Algorithm
 	{
 		while (first != last)
 		{
-			auto middle = std::next(first, std::distance(first, last) / 2);
-
-			if (lessThan(*middle, value))
+			if (auto middle = std::next(first, std::distance(first, last) / 2); 
+				lessThan(*middle, value))
 			{
 				first = ++middle;
 			}
