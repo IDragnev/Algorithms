@@ -187,6 +187,25 @@ namespace IDragnev::Algorithm
 				            stablePartition(middle, last, p));
 		}
 	}
+
+	template <typename InputIt,
+		      typename ZipOp,
+		      typename ReduceOp,
+		      typename T
+	> T zipReduce(InputIt first1, InputIt last1,
+		           InputIt first2,
+		           T accumulator,
+		           ZipOp zip, ReduceOp reduce)
+	{
+		while (first1 != last1)
+		{
+			accumulator = reduce(std::move(accumulator), zip(*first1, *first2));
+			++first1;
+			++first2;
+		}
+
+		return accumulator;
+	}
 }
 
 #include "SelectionSorterImpl.hpp"

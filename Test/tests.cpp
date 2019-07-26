@@ -165,6 +165,20 @@ namespace Test
 			Assert::IsTrue(it == std::begin(nums) + 5);
 		}
 
+		TEST_METHOD(zipReduce)
+		{
+			auto max = [](auto x, auto y) { return x >= y ? x : y; };
+			auto nums = std::vector<int>{ 2, 3, 5, 9, 11 };
+
+			auto result = alg::zipReduce(std::cbegin(nums) + 1, std::cend(nums),
+				                         std::cbegin(nums),
+										 0,
+										 std::minus<int>{},
+										 max);
+
+			Assert::AreEqual(result, 4);
+		}
+
 	private:
 		template <typename Sorter>
 		static bool sortsNonTrivialArray()
