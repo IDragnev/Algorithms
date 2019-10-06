@@ -1,7 +1,7 @@
 
 namespace IDragnev::Algorithm
 {
-	template<class ForwardIt, typename CompareFn>
+	template<typename ForwardIt, typename CompareFn>
 	ForwardIt minElementPosition(ForwardIt first, ForwardIt last, CompareFn lessThan)
 	{
 		if (first == last)

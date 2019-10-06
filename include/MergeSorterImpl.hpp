@@ -1,15 +1,16 @@
+#pragma once
+
+#include "InsertionSorterImpl.hpp"
 
 namespace IDragnev::Algorithm
 {
-	//all members act like local
-	//variables and thus need not be copied
 	template <typename RandomAccessIt, std::size_t lowerBound>
 	MergeSorter<RandomAccessIt, lowerBound>::MergeSorter(const MergeSorter&) noexcept
 	{
 	}
 
 	template <typename RandomAccessIt, std::size_t lowerBound>
-	inline auto MergeSorter<RandomAccessIt, lowerBound>::operator=(const MergeSorter&) noexcept -> MergeSorter&
+	auto MergeSorter<RandomAccessIt, lowerBound>::operator=(const MergeSorter&) noexcept -> MergeSorter&
 	{
 		return *this;
 	}

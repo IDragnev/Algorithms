@@ -1,12 +1,32 @@
-#ifndef __SORTINGS_H_INCLUDED__
-#define __SORTINGS_H_INCLUDED__
+#pragma once
 
-#include "Functional\Functional.h"
-#include "UtilityFunctions.h"
+#include "functional.hpp"
 #include <future>
+#include <type_traits>
 
 namespace IDragnev::Algorithm
 {
+	template <typename Callable>
+	class CallOnDestruction
+	{
+	private:
+		static_assert(std::is_nothrow_invocable_v<Callable>);
+		static_assert(std::is_nothrow_move_constructible_v<Callable>);
+
+	public:
+		CallOnDestruction(Callable f) noexcept :
+			f(std::move(f))
+		{
+		}
+		~CallOnDestruction() { f(); }
+
+		CallOnDestruction(const CallOnDestruction&) = delete;
+		CallOnDestruction& operator=(const CallOnDestruction&) = delete;
+
+	private:
+		Callable f;
+	};
+
 	template <typename T, typename CompareFn>
 	void swapIfLess(T& lhs, T& rhs, CompareFn lessThan)
 	{
@@ -21,7 +41,7 @@ namespace IDragnev::Algorithm
 	class InsertionSorter
 	{
 	public:
-		template <typename RandomAcessIt, typename CompareFn = Functional::LessThan>
+		template <typename RandomAcessIt, typename CompareFn = decltype(std::less{})>
 		void operator()(RandomAcessIt first, RandomAcessIt last, CompareFn lessThan = {}) const;
 
 	private:
@@ -32,13 +52,13 @@ namespace IDragnev::Algorithm
 		static void doSort(RandomAcessIt first, RandomAcessIt last, CompareFn less);
 	};
 
-	template<class ForwardIt, typename CompareFn = Functional::LessThan>
+	template<class ForwardIt, typename CompareFn = decltype(std::less{})>
 	ForwardIt minElementPosition(ForwardIt first, ForwardIt last, CompareFn lessThan = {});
 
 	class SelectionSorter
 	{
 	public:
-		template<typename ForwardIt, typename CompareFn = Functional::LessThan>
+		template<typename ForwardIt, typename CompareFn = decltype(std::less{})>
 		void operator()(ForwardIt first, ForwardIt last, CompareFn lessThan = {}) const;
 	};
 
@@ -49,7 +69,6 @@ namespace IDragnev::Algorithm
 		using Item = typename std::iterator_traits<RandomAccessIt>::value_type;
 		using Difference = typename std::iterator_traits<RandomAccessIt>::difference_type;
 		using Buffer = std::vector<Item>;
-		using CallOnDestruction = Utility::CallOnDestruction;
 
 	public:
 		MergeSorter() = default;
@@ -58,7 +77,7 @@ namespace IDragnev::Algorithm
 
 		MergeSorter& operator=(const MergeSorter& rhs) noexcept;
 
-		template <typename CompareFn = Functional::LessThan>
+		template <typename CompareFn = decltype(std::less{})>
 		void operator()(RandomAccessIt first, RandomAccessIt last, CompareFn lessThan = {});
 
 	private:
@@ -89,7 +108,7 @@ namespace IDragnev::Algorithm
 
 	template <typename InputIt,
 		      typename T,
-		      typename CompareFn = Functional::LessThan
+		      typename CompareFn = decltype(std::less{})
 	> constexpr InputIt
 	lowerBound(InputIt first, InputIt last, const T& value, CompareFn lessThan = {})
 	{
@@ -121,7 +140,7 @@ namespace IDragnev::Algorithm
 
 	template <typename InputIt,
 		      typename T,
-		      typename CompareFn = Functional::LessThan
+		      typename CompareFn = std::less<T>
 	> InputIt binarySearch(InputIt first, InputIt last, const T& value, CompareFn lessThan = {})
 	{
 		while (first != last)
@@ -280,4 +299,3 @@ namespace IDragnev::Algorithm
 #include "SelectionSorterImpl.hpp"
 #include "InsertionSorterImpl.hpp"
 #include "MergeSorterImpl.hpp"
-#endif //__SORTINGS_H_INCLUDED__
