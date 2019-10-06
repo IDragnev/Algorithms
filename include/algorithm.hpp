@@ -107,10 +107,10 @@ namespace IDragnev::Algorithm
 	};
 
 	template <typename InputIt,
-		      typename T,
-		      typename CompareFn = decltype(std::less{})
-	> constexpr InputIt
-	lowerBound(InputIt first, InputIt last, const T& value, CompareFn lessThan = {})
+			  typename T,
+			  typename CompareFn = decltype(std::less{})
+    > constexpr InputIt
+	lowerBound(InputIt first, InputIt last, const T &value, CompareFn lessThan = {})
 	{
 		while (first != last)
 		{
@@ -129,23 +129,23 @@ namespace IDragnev::Algorithm
 	}
 
 	template <typename InputIt,
-		      typename T,
-		      typename CompareFn = std::greater<T>
-	> inline constexpr
-	InputIt upperBound(InputIt first, InputIt last, const T& value, CompareFn greaterThan = {})
+			  typename T,
+			  typename CompareFn = std::greater<T>
+	> inline constexpr InputIt 
+	upperBound(InputIt first, InputIt last, const T &value, CompareFn greaterThan = {})
 	{
 		using Functional::inverse;
 		return lowerBound(first, last, value, inverse(greaterThan));
 	}
 
 	template <typename InputIt,
-		      typename T,
-		      typename CompareFn = std::less<T>
-	> InputIt binarySearch(InputIt first, InputIt last, const T& value, CompareFn lessThan = {})
+			  typename T,
+			  typename CompareFn = std::less<T>
+    > InputIt binarySearch(InputIt first, InputIt last, const T &value, CompareFn lessThan = {})
 	{
 		while (first != last)
 		{
-			if (auto middle = std::next(first, std::distance(first, last) / 2); 
+			if (auto middle = std::next(first, std::distance(first, last) / 2);
 				lessThan(*middle, value))
 			{
 				first = ++middle;
@@ -176,7 +176,7 @@ namespace IDragnev::Algorithm
 		while (read != last) {
 			if (write == nextRead) { //in case [first, middle) exhausts first
 				nextRead = read;
-			}		
+			}
 			std::iter_swap(write++, read++);
 		}
 
@@ -189,32 +189,32 @@ namespace IDragnev::Algorithm
 	ForwardIt stablePartition(ForwardIt first, ForwardIt last, Predicate p)
 	{
 		if (auto length = std::distance(first, last);
-			length == 0) 
+			length == 0)
 		{
 			return first;
 		}
-		else if (length == 1) 
+		else if (length == 1)
 		{
 			return p(*first) ? first + 1 : first;
-		} 
-		else 
-		{			
+		}
+		else
+		{
 			auto middle = std::next(first, length / 2);
-			
+
 			return (rotate)(stablePartition(first, middle, p),
-				            middle,
-				            stablePartition(middle, last, p));
+							middle,
+							stablePartition(middle, last, p));
 		}
 	}
 
 	template <typename InputIt,
-		      typename ZipOp,
-		      typename ReduceOp,
-		      typename T
+			  typename ZipOp,
+			  typename ReduceOp,
+			  typename T
 	> T zipReduce(InputIt first1, InputIt last1,
-		           InputIt first2,
-		           T accumulator,
-		           ZipOp zip, ReduceOp reduce)
+				  InputIt first2,
+				  T accumulator,
+				  ZipOp zip, ReduceOp reduce)
 	{
 		while (first1 != last1)
 		{
@@ -231,8 +231,8 @@ namespace IDragnev::Algorithm
 			  typename ReduceOp,
 			  typename T
 	> T transformReduce(InputIt first, InputIt last,
-					     T accumulator,
-						 TransformOp f, ReduceOp reduce)
+					    T accumulator,
+					    TransformOp f, ReduceOp reduce)
 	{
 		while (first != last)
 		{
@@ -244,11 +244,11 @@ namespace IDragnev::Algorithm
 	}
 
 	template <typename InputIt,
-		      typename OutputIt,
-		      typename BinaryOperation
+			  typename OutputIt,
+			  typename BinaryOperation
 	> OutputIt inclusiveScan(InputIt first, InputIt last,
-							 OutputIt destFirst,
-							 BinaryOperation op)
+						     OutputIt destFirst,
+						     BinaryOperation op)
 	{
 		if (first == last) return destFirst;
 
@@ -257,8 +257,8 @@ namespace IDragnev::Algorithm
 		auto dest = ++destFirst;
 
 		for (auto current = ++first;
-			current != last;
-			++current)
+			 current != last;
+			 ++current)
 		{
 			accumulator = op(std::move(accumulator), *current);
 			*dest = accumulator;
@@ -269,13 +269,13 @@ namespace IDragnev::Algorithm
 	}
 
 	template <typename InputIt,
-		      typename OutputIt,
-		      typename T,
-		      typename BinaryOperation
+			  typename OutputIt,
+			  typename T,
+			  typename BinaryOperation
 	> OutputIt exclusiveScan(InputIt first, InputIt last,
-							 OutputIt destFirst,
-							 T init,
-							 BinaryOperation op)
+						     OutputIt destFirst,
+						     T init,
+						     BinaryOperation op)
 	{
 		if (first == last) return destFirst;
 
@@ -284,8 +284,8 @@ namespace IDragnev::Algorithm
 		auto dest = ++destFirst;
 
 		for (auto current = first;
-			std::next(current) != last; //exclude the last element
-			++current)
+			 std::next(current) != last; //exclude the last element
+			 ++current)
 		{
 			accumulator = op(std::move(accumulator), *current);
 			*dest = accumulator;
